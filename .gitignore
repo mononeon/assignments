@@ -1,0 +1,9 @@
+# Compiled source files
+*.o
+*.out
+*.exe
+
+# Backup / temp files
+*~
+*.swp
+
