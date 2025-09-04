@@ -1,9 +1,25 @@
-# Compiled source files
+# Compiled object files
 *.o
+
+# Compiled dynamic libraries
+*.so
+
+# Compiled static libraries
+*.a
+
+# Executables (Linux/Mac/Windows)
 *.out
 *.exe
 
-# Backup / temp files
+# The default gcc/clang output (no extension)
+a.out
+
+# Any executables you compile without extension (e.g., gcc file.c -o program)
+# This ignores all files in the repo root that don't have a dot in their name
+# (except README, LICENSE, Makefile)
+/[^.]*
+
+# Editor/IDE temp files
 *~
 *.swp
 
