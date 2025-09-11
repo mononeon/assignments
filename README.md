@@ -1,2 +1,2 @@
-# Assignments
-This is my CPNM assignments repo.
+# This is Jadavpur University Assignments repo.
+
