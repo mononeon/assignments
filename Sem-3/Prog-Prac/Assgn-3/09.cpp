@@ -11,8 +11,7 @@ public:
     Applicant() : id(++last_id), name(""), score(0.0) {}
     void receiveData() {
         cout << "Enter name: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, name);
+        getline(cin >> ws,  name);
         cout << "Enter score: "; cin >> score;
     }
     void show() const {
@@ -29,12 +28,15 @@ int main() {
         int ch; if (!(cin >> ch)) return 0;
         switch (ch) {
             case 1: {
-                Applicant a; a.receiveData(); list.push_back(a); break;
+                Applicant a; a.receiveData(); list.push_back(a);
+                break;
             }
             case 2: {
-                for (const auto &a : list) a.show(); break;
+                for (const auto &a : list) a.show();
+                break;
             }
-            case 3: cout << "Total applicants: " << list.size() << '\n'; break;
+            case 3: cout << "Total applicants: " << list.size() << '\n';
+            break;
             case 4: return 0;
             default: cout << "Invalid option\n";
         }

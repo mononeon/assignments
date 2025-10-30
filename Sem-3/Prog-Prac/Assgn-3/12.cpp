@@ -27,13 +27,13 @@ public:
             cout << "Error: item code '" << it.code << "' already exists.\n";
             return;
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore(1000, '\n');
         cout << "Enter item name: ";
         getline(cin, it.name);
         cout << "Enter rate: ";
-        if (!(cin >> it.rate)) { cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); cout << "Invalid rate\n"; return; }
+        if (!(cin >> it.rate)) { cin.clear(); cin.ignore(1000, '\n'); cout << "Invalid rate\n"; return; }
         cout << "Enter quantity: ";
-        if (!(cin >> it.quantity)) { cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); cout << "Invalid quantity\n"; return; }
+        if (!(cin >> it.quantity)) { cin.clear(); cin.ignore(1000, '\n'); cout << "Invalid quantity\n"; return; }
         items[it.code] = it;
         cout << "Item added.\n";
     }
@@ -84,9 +84,6 @@ public:
 };
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     ItemList inv;
     while (true) {
         cout << "\nITEM LIST MENU\n"

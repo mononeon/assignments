@@ -1,52 +1,70 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template<typename T>
-class Stack {
+class STACK {
 private:
-    vector<T> data;
-    size_t capacity;
+    int capacity;
+    int top;
+    int *data;
+    //vector<T> data;
 public:
-    explicit Stack(size_t cap = 100) : capacity(cap) { data.reserve(cap); }
-    bool push(const T &x) {
-        if (data.size() >= capacity) {
+    STACK(int cap) {
+        capacity = cap;
+        data = new int[capacity];
+        top = -1;
+    }
+    ~STACK() {
+        delete[] data;
+    }
+
+    bool isEmpty() { return top == -1; }
+    bool isFull() { return top >= capacity - 1; }
+
+    bool push(int x) {
+        if (isFull()) {
             cout << "Overflow: cannot push\n";
             return false;
         }
-        data.push_back(x);
+        data[++top] = x;
         return true;
     }
-    bool pop(T &out) {
-        if (data.empty()) {
+    int pop() {
+        if (isEmpty()) {
             cout << "Underflow: cannot pop\n";
-            return false;
+            return 0;
         }
-        out = data.back();
-        data.pop_back();
-        return true;
+        cout << data[top] << " is popped from stack\n";
+        return data[top--];
     }
-    bool isEmpty() const { return data.empty(); }
-    bool isFull() const { return data.size() >= capacity; }
-    void display() const {
-        cout << "Top -> ";
-        for (auto it = data.rbegin(); it != data.rend(); ++it) cout << *it << " ";
-        cout << "\n";
+    void display() {
+        if (isEmpty()) cout << "Stack is empty\n";
+        cout << "The top element is " << data[top] << "\n";
     }
 };
 
 int main() {
-    Stack<int> st;
+    int max_limit;
+    cout << "Enter max size limit of the stack: ";
+    cin >> max_limit;
+    STACK st(max_limit);
     while (true) {
-        cout << "\nSTACK MENU:\n1. Push\n2. Pop\n3. Display\n4. Exit\nChoose: ";
+        cout << "\nSTACK MENU:\n1. Push\n2. Pop\n3. Display\n4. Exit\n"
+             << "Choose: ";
         int ch; if (!(cin >> ch)) return 0;
         switch (ch) {
             case 1: {
-                int x; cout << "Enter value to push: "; cin >> x; st.push(x); break;
+                int x; cout << "Enter value to push: "; cin >> x;
+                st.push(x);
+                break;
             }
             case 2: {
-                int out; if (st.pop(out)) cout << "Popped: " << out << '\n'; break;
+                st.pop();
+                break;
             }
-            case 3: st.display(); break;
+            case 3: {
+                st.display();
+                break;
+            }
             case 4: return 0;
             default: cout << "Invalid option\n";
         }
