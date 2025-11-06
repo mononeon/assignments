@@ -6,7 +6,6 @@ private:
     int capacity;
     int top;
     int *data;
-    //vector<T> data;
 public:
     STACK(int cap) {
         capacity = cap;

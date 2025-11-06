@@ -35,7 +35,7 @@ public:
                     break;
                 } else {
                     cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cin.ignore();
                     cout << "  Invalid input. Enter integer marks.\n";
                 }
             }
@@ -74,7 +74,7 @@ public:
     }
 
     void showSummary() const {
-        cout << setw(10) << roll << " | " << setw(15) << name << " | " << setw(6) << course
+        cout << setw(10) << roll << " | " << setw(20) << name << " | " << setw(6) << course
              << " | " << admission_date << '\n';
     }
 
@@ -84,6 +84,7 @@ public:
 int Student::admitted_count = 0;
 
 int main() {
+
     vector<Student> students;
 
     while (true) {
@@ -106,7 +107,7 @@ int main() {
                 bool exists = false;
                 for (const auto &s : students) if (s.getRoll() == roll) { exists = true; break; }
                 if (exists) { cout << "Error: roll already exists.\n"; break; }
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore();
                 cout << "Name: "; getline(cin, name);
                 cout << "Course: "; getline(cin, course);
                 cout << "Admission date (YYYY-MM-DD): "; getline(cin, date);
@@ -133,8 +134,8 @@ int main() {
 
             case 4: {
                 if (students.empty()) { cout << "No students admitted yet.\n"; break; }
-                cout << setw(10) << "Roll" << " | " << setw(15) << "Name" << " | " << setw(6) << "Course" << " | Admission\n";
-                cout << string(55, '-') << '\n';
+                cout << setw(10) << "Roll" << " | " << setw(20) << "Name" << " | " << setw(6) << "Course" << " | Admission\n";
+                cout << string(60, '-') << '\n';
                 for (const auto &s : students) s.showSummary();
                 break;
             }

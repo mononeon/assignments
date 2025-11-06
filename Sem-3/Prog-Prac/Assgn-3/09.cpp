@@ -1,44 +1,64 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cstring>
 using namespace std;
 
 class Applicant {
-private:
     static int last_id;
     int id;
-    string name;
-    double score;
+    char name[50];
+    float score;
+
 public:
-    Applicant() : id(++last_id), name(""), score(0.0) {}
+    Applicant() { id = 0; }
+
     void receiveData() {
-        cout << "Enter name: ";
-        getline(cin >> ws,  name);
-        cout << "Enter score: "; cin >> score;
+        id = ++last_id;
+        cout << "Enter applicant name: ";
+        cin.ignore();
+        cin.getline(name, 50);
+        cout << "Enter score: ";
+        cin >> score;
     }
-    void show() const {
-        cout << "ID: " << id << " | Name: " << name << " | Score: " << score << '\n';
+
+    void showDetails() {
+        if (id == 0) return;
+        cout << "Application ID: " << id
+             << "\nName: " << name
+             << "\nScore: " << score << "\n";
     }
-    int getId() const { return id; }
+
+    static int getApplicantCount() { return last_id; }
 };
+
 int Applicant::last_id = 0;
 
 int main() {
-    vector<Applicant> list;
-    while (true) {
-        cout << "\nAPPLICANT MENU:\n1. Add Applicant\n2. Show All\n3. Count\n4. Exit\nChoose: ";
-        int ch; if (!(cin >> ch)) return 0;
+    Applicant applicants[100];
+    int count = 0, ch;
+
+    do {
+        cout << "\n=== Applicant Menu ===\n"
+             << "1. Add Applicant\n" 
+             << "2. Show All Applicants\n"
+             << "3. Show Count\n"
+             << "4. Exit\n"
+             << "Choice: ";
+        cin >> ch;
+
         switch (ch) {
-            case 1: {
-                Applicant a; a.receiveData(); list.push_back(a);
-                break;
-            }
-            case 2: {
-                for (const auto &a : list) a.show();
-                break;
-            }
-            case 3: cout << "Total applicants: " << list.size() << '\n';
+        case 1:
+            applicants[count].receiveData();
+            count++;
             break;
-            case 4: return 0;
-            default: cout << "Invalid option\n";
+        case 2:
+            for (int i = 0; i < count; ++i)
+                applicants[i].showDetails();
+            break;
+        case 3:
+            cout << "Total Applicants: " << Applicant::getApplicantCount() << "\n";
+            break;
         }
-    }
+    } while (ch != 4);
+
+    return 0;
 }

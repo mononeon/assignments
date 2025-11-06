@@ -1,144 +1,107 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cstring>
 using namespace std;
 
 struct Item {
-    string code;
-    string name;
-    double rate = 0.0;
-    int quantity = 0;
+    int code;
+    char name[50];
+    float rate;
+    int quantity;
 };
 
 class ItemList {
-private:
-    unordered_map<string, Item> items;
+    Item items[100];
+    int count;
 
 public:
-    bool addItem(const Item &it) {
-        if (items.find(it.code) != items.end()) return false;
-        items[it.code] = it;
-        return true;
-    }
+    ItemList() { count = 0; }
 
-    void addItemInteractive() {
+    void addItem() {
         Item it;
-        cout << "Enter item code: ";
-        cin >> it.code;
-        if (items.find(it.code) != items.end()) {
-            cout << "Error: item code '" << it.code << "' already exists.\n";
-            return;
-        }
-        cin.ignore(1000, '\n');
-        cout << "Enter item name: ";
-        getline(cin, it.name);
-        cout << "Enter rate: ";
-        if (!(cin >> it.rate)) { cin.clear(); cin.ignore(1000, '\n'); cout << "Invalid rate\n"; return; }
-        cout << "Enter quantity: ";
-        if (!(cin >> it.quantity)) { cin.clear(); cin.ignore(1000, '\n'); cout << "Invalid quantity\n"; return; }
-        items[it.code] = it;
-        cout << "Item added.\n";
+        cout << "Enter item code: "; cin >> it.code;
+        for (int i = 0; i < count; ++i)
+            if (items[i].code == it.code) {
+                cout << "Item code already exists!\n";
+                return;
+            }
+        cin.ignore();
+        cout << "Enter item name: "; cin.getline(it.name, 50);
+        cout << "Enter rate: "; cin >> it.rate;
+        cout << "Enter quantity: "; cin >> it.quantity;
+        items[count++] = it;
     }
 
-    bool updateRate(const string &code, double newRate) {
-        auto it = items.find(code);
-        if (it == items.end()) return false;
-        it->second.rate = newRate;
-        return true;
+    void updateRate() {
+        int code; cout << "Enter item code: "; cin >> code;
+        for (int i = 0; i < count; ++i)
+            if (items[i].code == code) {
+                cout << "Enter new rate: "; cin >> items[i].rate; return;
+            }
+        cout << "Item not found!\n";
     }
 
-    bool issueItem(const string &code, int qty) {
-        auto it = items.find(code);
-        if (it == items.end()) return false;
-        if (qty <= 0) return false;
-        if (it->second.quantity < qty) return false;
-        it->second.quantity -= qty;
-        return true;
+    void issueItem() {
+        int code, qty;
+        cout << "Enter code and quantity: ";
+        cin >> code >> qty;
+        for (int i = 0; i < count; ++i)
+            if (items[i].code == code) {
+                if (items[i].quantity < qty) cout << "Not enough stock!\n";
+                else items[i].quantity -= qty;
+                return;
+            }
+        cout << "Item not found!\n";
     }
 
-    bool receiveItem(const string &code, int qty) {
-        auto it = items.find(code);
-        if (it == items.end()) return false;
-        if (qty <= 0) return false;
-        it->second.quantity += qty;
-        return true;
+    void receiveItem() {
+        int code, qty; cout << "Enter code and quantity: "; cin >> code >> qty;
+        for (int i = 0; i < count; ++i)
+            if (items[i].code == code) {
+                items[i].quantity += qty; return;
+            }
+        cout << "Item not found!\n";
     }
 
-    bool getPriceAndQuantity(const string &code, double &rateOut, int &qtyOut) const {
-        auto it = items.find(code);
-        if (it == items.end()) return false;
-        rateOut = it->second.rate;
-        qtyOut  = it->second.quantity;
-        return true;
+    void showItem() {
+        int code; cout << "Enter code: "; cin >> code;
+        for (int i = 0; i < count; ++i)
+            if (items[i].code == code) {
+                cout << items[i].name << ": Rate " << items[i].rate
+                     << ", Qty " << items[i].quantity << "\n";
+                return;
+            }
+        cout << "Item not found!\n";
     }
 
-    void showAll() const {
-        if (items.empty()) { cout << "Inventory is empty.\n"; return; }
-        cout << left << setw(12) << "Code" << setw(24) << "Name" << setw(10) << "Rate" << setw(10) << "Qty" << "\n";
-        cout << string(56, '-') << "\n";
-        for (const auto &p : items) {
-            const Item &it = p.second;
-            cout << left << setw(12) << it.code << setw(24) << it.name
-                 << setw(10) << fixed << setprecision(2) << it.rate
-                 << setw(10) << it.quantity << "\n";
-        }
+    void displayAll() {
+        for (int i = 0; i < count; ++i)
+            cout << items[i].code << " " << items[i].name
+                 << " " << items[i].rate << " " << items[i].quantity << "\n";
     }
 };
 
 int main() {
-    ItemList inv;
-    while (true) {
-        cout << "\nITEM LIST MENU\n"
-             << "1. Add item\n"
-             << "2. Update rate\n"
-             << "3. Issue item (reduce qty)\n"
-             << "4. Receive item (increase qty)\n"
-             << "5. Show price & quantity for an item\n"
-             << "6. Show all items\n"
+    ItemList L;
+    int ch;
+    do {
+        cout << "\n=== Item List Menu ===\n"
+             << "1. Add Item\n"
+             << "2. Update Rate\n"
+             << "3. Issue Item\n"
+             << "4. Receive Item\n"
+             << "5. Show Item\n"
+             << "6. Display All\n"
              << "7. Exit\n"
-             << "Choose: ";
-        int ch;
-        if (!(cin >> ch)) break;
+             << "Choice: ";
+        cin >> ch;
         switch (ch) {
-            case 1:
-                inv.addItemInteractive();
-                break;
-            case 2: {
-                string code; double nr;
-                cout << "Enter code: "; cin >> code;
-                cout << "Enter new rate: "; if (!(cin >> nr)) { cout << "Invalid rate\n"; break; }
-                if (!inv.updateRate(code, nr)) cout << "Item not found.\n"; else cout << "Rate updated.\n";
-                break;
-            }
-            case 3: {
-                string code; int q;
-                cout << "Enter code: "; cin >> code;
-                cout << "Enter qty to issue: "; if (!(cin >> q)) { cout << "Invalid qty\n"; break; }
-                if (inv.issueItem(code, q)) cout << "Issued " << q << " of " << code << ".\n";
-                else cout << "Issue failed (item not found or insufficient qty).\n";
-                break;
-            }
-            case 4: {
-                string code; int q;
-                cout << "Enter code: "; cin >> code;
-                cout << "Enter qty to receive: "; if (!(cin >> q)) { cout << "Invalid qty\n"; break; }
-                if (inv.receiveItem(code, q)) cout << "Received " << q << " of " << code << ".\n";
-                else cout << "Receive failed (item not found).\n";
-                break;
-            }
-            case 5: {
-                string code; cout << "Enter code: "; cin >> code;
-                double r; int q;
-                if (inv.getPriceAndQuantity(code, r, q)) cout << "Rate: " << fixed << setprecision(2) << r << " | Qty: " << q << "\n";
-                else cout << "Item not found.\n";
-                break;
-            }
-            case 6:
-                inv.showAll();
-                break;
-            case 7:
-                cout << "Exiting.\n"; return 0;
-            default:
-                cout << "Invalid option.\n";
+        case 1: L.addItem(); break;
+        case 2: L.updateRate(); break;
+        case 3: L.issueItem(); break;
+        case 4: L.receiveItem(); break;
+        case 5: L.showItem(); break;
+        case 6: L.displayAll(); break;
         }
-    }
+    } while (ch != 7);
     return 0;
 }
